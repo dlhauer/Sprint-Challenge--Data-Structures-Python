@@ -1,4 +1,5 @@
 from doubly_linked_list import DoublyLinkedList
+from dll_queue import Queue
 
 
 class RingBuffer:
@@ -6,16 +7,25 @@ class RingBuffer:
         self.capacity = capacity
         self.current = None
         self.storage = DoublyLinkedList()
+        self.order = Queue()
 
     def append(self, item):
-        pass
+        if len(self.storage) == self.capacity:
+            node = self.order.dequeue()
+            node.value = item
+            self.order.enqueue(node)
+        else:
+            self.storage.add_to_tail(item)
+            self.order.enqueue(self.storage.tail)
 
     def get(self):
-        # Note:  This is the only [] allowed
-        list_buffer_contents = []
-
-        # TODO: Your code here
-
+        list_buffer_contents = [''] * len(self.storage) 
+        node = self.storage.head
+        i = 0
+        while node:
+            list_buffer_contents[i] = node.value
+            i += 1
+            node = node.next
         return list_buffer_contents
 
 # ----------------Stretch Goal-------------------
@@ -30,3 +40,9 @@ class ArrayRingBuffer:
 
     def get(self):
         pass
+
+def print_list(head):
+    while head:
+        print(head.value)
+        head = head.next
+
